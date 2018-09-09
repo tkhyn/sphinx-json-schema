@@ -9,7 +9,7 @@ import requests
 from collections import OrderedDict
 import re
 
-from .helpers import merge
+from .mergers import merge
 
 
 ORDER = ['$ref', 'description', 'oneOf', 'anyOf', 'type', 'required', 'properties']
@@ -74,7 +74,7 @@ class JsonSchemaLoader(object):
                         )
                     ).schema)
                     break
-                elif key in ['allOf']:
+                elif key in ['allOf', 'oneOf', 'anyOf']:
                     # value is a list of dictionaries, they should be merged
                     for dd in value:
                         merge(d, dd, key)
