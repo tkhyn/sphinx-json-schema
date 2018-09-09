@@ -14,20 +14,26 @@ def merge(base, to_merge, mode):
     else:
         raise RuntimeError('Merging mode "%s" is not supported yet' % mode)
 
-def merge_and(base, to_merge):
+def merge_and(base, to_merge, neg=False):
     """
     Merge json schemas assuming an 'allOf' command
     """
     if not base:
         return to_merge
 
+    to_pop = []
     for key, val in base.items():
         if key in ['$or', '$xor']:
             for v in val:
-                merge_and(v, to_merge)
+                merge_and(v, to_merge, neg)
+        elif key == 'not':
+            merge_and(to_merge, val, True)
         elif isinstance(val, Mapping):
             try:
-                merge_and(val, to_merge[key])
+                if neg and to_merge[key] == val:
+                    to_pop.append(key)
+                else:
+                    merge_and(val, to_merge[key], neg)
             except KeyError:
                 pass
         elif isinstance(val, list):
@@ -36,18 +42,31 @@ def merge_and(base, to_merge):
                 if not isinstance(other_val, list):
                     raise KeyError
                 if key == 'enum':
-                    for v in set(val).symmetric_difference(other_val):
+                    if neg:
+                        s = set(val).intersection(other_val)
+                    else:
+                        s = set(val).symmetric_difference(other_val)
+                    for v in s:
                         val.remove(v)
                 elif key == 'required':
-                    for v in other_val:
-                        if v not in val:
-                            val.append(v)
+                    if neg:
+                        for v in other_val:
+                            val.remove(v)
+                    else:
+                        for v in other_val:
+                            if v not in val:
+                                val.append(v)
             except KeyError:
                 base[key] = val
         else:
             # normal update
             try:
-                base[key] = to_merge[key]
+                if neg and key not in ['type', 'description']:
+                    base[key] = {
+                        'not': to_merge[key]
+                    }
+                else:
+                    base[key] = to_merge[key]
             except KeyError:
                 pass
 
@@ -62,8 +81,18 @@ def merge_and(base, to_merge):
                 b = deepcopy(base)
                 merge_and(b, v)
                 alternatives.append(v)
+        elif key == 'not':
+            merge_and(base, to_merge[key], True)
         else:
-            base[key] = to_merge[key]
+            if neg and key not in ['type', 'description']:
+                base[key] = {
+                    'not': to_merge[key]
+                }
+            else:
+                base[key] = to_merge[key]
+
+    for key in to_pop:
+        base.pop(key)
 
     return base
 
