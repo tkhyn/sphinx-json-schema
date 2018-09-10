@@ -19,13 +19,13 @@ def merge_and(base, to_merge, neg=False):
     Merge json schemas assuming an 'allOf' command
     """
     if not base:
-        return to_merge
+        base.update(to_merge)
+        return base
 
     to_pop = []
     for key, val in base.items():
         if key in ['$or', '$xor']:
-            for v in val:
-                merge_and(v, to_merge, neg)
+            continue
         elif key == 'not':
             merge_and(to_merge, val, True)
         elif isinstance(val, Mapping):
@@ -65,7 +65,7 @@ def merge_and(base, to_merge, neg=False):
                     base[key] = {
                         'not': to_merge[key]
                     }
-                else:
+                elif key != '$ref':
                     base[key] = to_merge[key]
             except KeyError:
                 pass
@@ -78,9 +78,8 @@ def merge_and(base, to_merge, neg=False):
                 alternatives = [{}]
                 base[key] = alternatives
             for v in to_merge.pop(key):
-                b = deepcopy(base)
-                merge_and(b, v)
-                alternatives.append(v)
+                if v:
+                    alternatives.append(v)
         elif key == 'not':
             merge_and(base, to_merge[key], True)
         else:
@@ -88,6 +87,9 @@ def merge_and(base, to_merge, neg=False):
                 base[key] = {
                     'not': to_merge[key]
                 }
+            elif key == '$ref':
+                if key not in base.keys():
+                    base[key] = to_merge[key]
             else:
                 base[key] = to_merge[key]
 
@@ -111,12 +113,9 @@ def merge_or(base, to_merge, exclusive):
     operand = '$%sor' % ('x' if exclusive else '')
 
     if not base:
-        return {
-            operand: [
-                {},
-                to_merge
-            ]
-        }
+        base.update(to_merge)
+        base[operand] = [{}]
+        return base
 
     try:
         alternatives = base[operand]
@@ -135,7 +134,7 @@ def merge_or(base, to_merge, exclusive):
             a[key] = val
 
     for key in set(to_merge.keys()).intersection(base.keys()):
-        if key.startswith('%'):
+        if key.startswith('$'):
             # do not process special keys
             continue
         # keys that are both in base and to_merge
