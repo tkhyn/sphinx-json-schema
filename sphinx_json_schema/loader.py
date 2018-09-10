@@ -12,7 +12,8 @@ import re
 from .mergers import merge
 
 
-ORDER = ['$ref', 'description', 'oneOf', 'anyOf', 'type', 'required', 'properties']
+ORDER = ['$ref', 'description', 'oneOf', 'anyOf', 'type', 'required', 'properties', "dependencies",
+         '$xor', '$or']
 
 
 class JsonSchemaLoader(object):
@@ -79,7 +80,6 @@ class JsonSchemaLoader(object):
                     for dd in value:
                         merge(d, dd, key)
                 else:
-                    # TODO: handle oneOf, anyOf ...
                     d[key] = value
 
             # order the output
