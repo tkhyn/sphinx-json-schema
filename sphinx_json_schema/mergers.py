@@ -54,7 +54,10 @@ def merge_and(base, to_merge, neg=False):
                 elif key == 'required':
                     if neg:
                         for v in other_val:
-                            val.remove(v)
+                            try:
+                                val.remove(v)
+                            except ValueError:
+                                pass
                     else:
                         for v in other_val:
                             if v not in val:
