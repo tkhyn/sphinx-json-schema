@@ -47,7 +47,10 @@ def merge_and(base, to_merge, neg=False):
                     else:
                         s = set(val).symmetric_difference(other_val)
                     for v in s:
-                        val.remove(v)
+                        try:
+                            val.remove(v)
+                        except ValueError:
+                            pass
                 elif key == 'required':
                     if neg:
                         for v in other_val:
