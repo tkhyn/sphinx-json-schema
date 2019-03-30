@@ -6,7 +6,7 @@ JSON Schema renderer for Sphinx
 from setuptools import setup, find_packages
 import os
 
-PACKAGE = 'pyboc'
+PACKAGE = 'sphinx_json_schema'
 
 # credentials
 AUTHOR = 'Thomas Khyn'
