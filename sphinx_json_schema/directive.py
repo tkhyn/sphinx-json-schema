@@ -33,6 +33,8 @@ class JsonSchema(Directive):
                         raise IndexError
                     # no file at relative location, try loading from root directory
                     file_or_url = os.path.join(root_dir, file_or_url)
+                    if not os.path.exists(file_or_url):
+                        raise IndexError
         except IndexError:
             file_or_url = None
 
