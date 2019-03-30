@@ -24,7 +24,15 @@ class JsonSchema(Directive):
             if not file_or_url.startswith('http') and not os.path.isabs(file_or_url):
                 # file relative to the path of the current rst file
                 dname = os.path.dirname(self.state_machine.input_lines.source(0))
-                file_or_url = os.path.join(dname, file_or_url)
+                path = os.path.join(dname, file_or_url)
+                if os.path.exists(path):
+                    file_or_url = path
+                else:
+                    root_dir = self.state.document.settings.env.config.jsonschema_root_dir
+                    if root_dir is None:
+                        raise IndexError
+                    # no file at relative location, try loading from root directory
+                    file_or_url = os.path.join(root_dir, file_or_url)
         except IndexError:
             file_or_url = None
 
