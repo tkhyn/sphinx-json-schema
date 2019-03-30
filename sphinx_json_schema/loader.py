@@ -33,7 +33,7 @@ class JsonSchemaLoader(object):
         if self.version:
             try:
                 self.version = ' (%s)' % re.match(
-                    'http://json-schema.org/(draft-\d\d)/schema#', self.version
+                    r'http://json-schema.org/(draft-\d\d)/schema#', self.version
                 ).groups()[0]
             except AttributeError:
                 self.version = ''
