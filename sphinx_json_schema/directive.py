@@ -17,7 +17,7 @@ class JsonSchema(Directive):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        assert self.name == 'jsonschema'
+        assert self.name == 'json_schema'
 
         try:
             file_or_url = self.arguments[0]
@@ -28,7 +28,7 @@ class JsonSchema(Directive):
                 if os.path.exists(path):
                     file_or_url = path
                 else:
-                    root_dir = self.state.document.settings.env.config.jsonschema_root_dir
+                    root_dir = self.state.document.settings.env.config.json_schema_root_dir
                     if root_dir is None:
                         raise IndexError
                     # no file at relative location, try loading from root directory
