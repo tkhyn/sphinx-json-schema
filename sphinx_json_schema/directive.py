@@ -8,7 +8,6 @@ from docutils.parsers.rst import Directive
 from sphinx.directives.code import container_wrapper
 
 from .loader import JsonSchemaLoader
-from .version import __version__
 
 
 class JsonSchema(Directive):
@@ -30,7 +29,7 @@ class JsonSchema(Directive):
             file_or_url = None
 
         self.schema = JsonSchemaLoader(
-            *((file_or_url,) or (self.content, self.state_machine.input_lines.source(0)))
+            *(file_or_url,) or (self.content, self.state_machine.input_lines.source(0))
         )
 
     def run(self):
@@ -40,7 +39,3 @@ class JsonSchema(Directive):
         # add a caption
         literal = container_wrapper(self, literal, 'JSON schema' + self.schema.version)
         return [literal]
-
-def setup(app):
-    app.add_directive('jsonschema', JsonSchema)
-    return {'version': __version__}
