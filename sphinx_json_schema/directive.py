@@ -38,11 +38,17 @@ class JsonSchema(Directive):
         except IndexError:
             file_or_url = None
 
-        self.schema = JsonSchemaLoader(
-            *(file_or_url,) or (self.content, self.state_machine.input_lines.source(0))
-        )
+        if file_or_url:
+            self.schema = JsonSchemaLoader(file_or_url)
+        elif self.content:
+            self.schema = JsonSchemaLoader(self.content, self.state_machine.input_lines.source(0))
+        else:
+            self.schema = None
 
     def run(self):
+        if not self.schema:
+            return []
+
         code = self.schema.render()
         literal = nodes.literal_block(code, code)
         literal['language'] = 'json'
