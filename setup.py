@@ -47,7 +47,8 @@ setup(
     ],
     packages=find_packages(),
     install_requires=(
-        'sphinx'
+        'sphinx',
+        'jsonpointer'
     ),
-    zip_safe=False
+    zip_safe=True
 )
