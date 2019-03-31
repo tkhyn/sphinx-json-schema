@@ -29,7 +29,7 @@ If necessary, add a root directory to look for json schemas::
 
 In your documentation::
 
-   .. json_schema:: path/to/json/schema.json
+   .. json-schema:: path/to/json/schema.json
 
 The file is looked up relatively from the ``.rst`` file the directive is called in, or, if not
 found from the ``json_schema_root_dir`` specified in the ``conf.py`` file.

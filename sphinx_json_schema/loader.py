@@ -41,7 +41,7 @@ class JsonSchemaLoader(object):
     def _load_internal(self, text):
         if text is None or len(text) == 0:
             raise RuntimeError(
-                "json_schema directive requires either filename, http url or inline content"
+                "json-schema directive requires either filename, http url or inline content"
             )
         self.schema = self.ordered_load('\n'.join(text))
 

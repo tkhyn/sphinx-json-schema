@@ -17,7 +17,7 @@ class JsonSchema(Directive):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        assert self.name == 'json_schema'
+        assert self.name == 'json-schema'
 
         try:
             file_or_url = self.arguments[0]
