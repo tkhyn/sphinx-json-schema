@@ -1,10 +1,6 @@
-syntax: glob
-
-
 # buildout
 bin/
 .installed.cfg
-
 
 # tests
 tests/.cache
