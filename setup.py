@@ -11,7 +11,7 @@ PACKAGE = 'sphinx_json_schema'
 # credentials
 AUTHOR = 'Thomas Khyn'
 AUTHOR_EMAIL = 'thomas@ksytek.com'
-URL = 'https://bitbucket.org/tkhyn/sphinx-json-schema/'
+URL = 'https://github.com/tkhyn/sphinx-json-schema/'
 
 # imports __version__ and __version_info__ variables
 exec(open('sphinx_json_schema/version.py').read())
