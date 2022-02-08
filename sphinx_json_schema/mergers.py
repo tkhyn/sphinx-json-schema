@@ -2,8 +2,7 @@
 JSON schema loader helpers
 """
 
-from collections import Mapping
-from copy import deepcopy
+from .compat import Mapping
 
 
 def merge(base, to_merge, mode):
