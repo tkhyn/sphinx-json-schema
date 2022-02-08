@@ -6,6 +6,12 @@ Changelog
 \! bugfix
 
 
+v0.2 (08/02/2022)
+-----------------
+
+\! compatibility with Python 3.8+
+
+
 v0.1b (30/03/2019)
 ------------------
 
